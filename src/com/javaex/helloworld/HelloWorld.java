@@ -2,29 +2,42 @@ package com.javaex.helloworld;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class HelloWorld {
 	public static void main(String[] args) {
-		ArrayList<String> colors = new ArrayList<>(Arrays.asList("Black", "White", "Green", "Red"));
-		String removedColor = colors.remove(0);
-		System.out.println("Removed color is "+removedColor);
-
-		colors.remove("White");
-		System.out.println(colors);
-
-		colors.clear();
-		System.out.println(colors);
+		
 	}
+}
+
+public class A implements Cloneable {
+
+	private String name;
 	
-	static double d(double n) {
-		int cnt = 0;
-		
-		for() {
-			double tenPow = Math.pow(10.0, cnt);
-			
-			cnt++;
-		}
-		
-		
+	private ArrayList<String> list = new ArrayList<String>();
+
+	public List getList(){
+		return list;
 	}
+
+	public void setList(String value) {
+		this.list.add(value);
+	}
+
+	public String getName(){
+		return name;
+	}
+
+	public void setName(String name){
+		this.name = name;
+	}
+
+	public Object clone() throws CloneNotSupportedException {
+		A a = (A) super.clone();
+		
+		a.list = (ArrayList)list.clone();
+		
+		return a;
+	}
+
 }
