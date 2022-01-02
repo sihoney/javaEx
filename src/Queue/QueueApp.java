@@ -10,8 +10,6 @@ public class QueueApp {
 		LinkedListQueue<Integer> original = new LinkedListQueue();
 		original.offer(10);
 		
-		LinkedListQueue<>
-		
 		/*
 		ArrayQueue<Student> q = new ArrayQueue<>();
 		
