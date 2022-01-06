@@ -1,6 +1,12 @@
-package interface_form;
-
 // 출처: stranger's lab
+/*
+ * [stack의 활용]
+ * 1. 페이지 뒤로 가기
+ * 2. 실행 취소
+ * 3. 수식 괄호 검사
+ */
+
+package interface_form;
 
 public interface StackInterface<E> {
 
