@@ -38,10 +38,12 @@ public class Stack<E> implements StackInterface<E>, Cloneable {
 	////////////////////////////
 	// method
 	////////////////////////////
+	
 	/*
 	 * 용적은 외부에서 마음대로 접근하면 데이터의 손상을 야기할 수 있기 때문에
-	 * private로 접근을 제한해주자!
+	 * private로 접근을 제한!
 	 */
+	
 	private void resize() {
 		
 		// <1> 빈 배열일 경우(capacity is 0)
@@ -54,20 +56,30 @@ public class Stack<E> implements StackInterface<E>, Cloneable {
 		
 		// <2> 용적이 가득 찰 경우
 		if(size == arrayCapacity) {
+			int newSize = arrayCapacity * 2;
 			
+			array = Arrays.copyOf(array, newSize);
+			return;
+		}
+		
+		// <3> 용적의 절반 미만으로 요소가 차지하고 있을 경우
+		if(size < (arrayCapacity / 2)) {
+			int newCapacity = (arrayCapacity / 2);
+			
+			array = Arrays.copyOf(array, Math.max(DEFAULT_CAPACITY, newCapacity));
+			return;
 		}
 	}
 
 	@Override
 	public E push(E item) {
 		
-		// 용적이 꽉 차있다면 용적을 재할당
 		if(size == array.length) {
 			resize();
 		}
 		
-		array[size] = item; // 마지막 위치에 요소 추가
-		size++; // 사이즈 1 증가
+		array[size] = item;
+		size++;
 		
 		return item;
 	}
@@ -75,19 +87,16 @@ public class Stack<E> implements StackInterface<E>, Cloneable {
 	@Override
 	public E pop() {
 		
-		// 만약 삭제할 요소가 없다면 Stack이 비어있다는 의미이므로 예외 발생시키기
 		if(size == 0) {
 			throw new EmptyStackException();
 		}
 		
 		@SuppressWarnings("unchecked")
-		E obj = (E) array[size - 1]; // 삭제할 요소를 반환하기 위한 임시 변수
+		E obj = (E) array[size - 1];
 		
-		array[size - 1] = null; // 요소 삭제
-		
-		size--; // 사이즈 감소
-		resize(); // 용적 재할당
-		
+		array[size - 1] = null;
+		size--;
+		resize();
 		return obj;
 	}
 
@@ -95,7 +104,6 @@ public class Stack<E> implements StackInterface<E>, Cloneable {
 	@Override
 	public E peek() {
 		
-		// 만약 삭제할 요소가 없다면 Stack이 비어있다는 의미이므로 예외 발생시키기
 		if(size == 0) {
 			throw new EmptyStackException();
 		}
@@ -108,7 +116,6 @@ public class Stack<E> implements StackInterface<E>, Cloneable {
 		
 		for(int idx = size - 1; idx >= 0; idx--) {
 			
-			// 같은 객체를 찾았을 경우 size - idx 값을 반환
 			if(array[idx].equals(value)) {
 				return size - idx;
 			}
@@ -125,11 +132,11 @@ public class Stack<E> implements StackInterface<E>, Cloneable {
 	@Override
 	public void clear() {
 		
-		for(int i = 0; i < size; i++ ) {
+		for(int i = 0; i < size; i++) {
 			array[i] = null;
 		}
 		
-		size = 0;
+		size = 0; 
 		resize();
 	}
 
@@ -138,17 +145,18 @@ public class Stack<E> implements StackInterface<E>, Cloneable {
 		return size == 0;
 	}
 	
+	/******************************************
+	 * 부가목록 - clone, toArray, sort 메소드
+	 ******************************************/
+	
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		
-		// 새로운 Stack "객체 생성"
 		Stack<?> cloneStack = (Stack<?>) super.clone();
 		
-		// 새로운 스택의 "배열도 생성"
 		cloneStack.array = new Object[size];
 		
-		// 현재 배열을 새로운 스택의 배열에 값을 "복사"함
-		System.arraycopy(array, 0, cloneStack.array, 0, size);
+		System.arraycopy(array, 0, cloneStack, 0, size);
 		return cloneStack;
 	}
 

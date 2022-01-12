@@ -1,4 +1,10 @@
 /*
+ * Queue (using Array)
+ * 
+ * java에서 제공하고 있는 Queue는 인터페이스(interface)고
+ * Queue interface를 구현하는 라이브러리는 크게 
+ * ArrayDeque, LinkedList, PriorityQueue가 있다.
+ * 
  * Queue는 자바로 구현할 경우 LinkedList로 구현하는게 휠씬 편하다.
  * 기본적인 Queue에 대한 개념을 잡고 다른 언어로도 구현하게 될 수도 있기에 
  * 기본적으로 배열을 사용한 방식으로 먼저 포스팅했다. 
@@ -14,6 +20,9 @@ import interface_form.Queue;
 
 public class ArrayQueue<E> implements Queue<E> {
 	
+	/////////////////////
+	// field
+	/////////////////////
 	private static final int DEFAULT_CAPACITY = 64; // 최소 기본 용적 크기
 	
 	private Object[] array; // 요소를 담을 배열
@@ -22,7 +31,10 @@ public class ArrayQueue<E> implements Queue<E> {
 	private int front; // 시작 인텍스를 가리키는 변수(빈 공간을 유의)
 	private int rear; // 마지막 요소의 인덱스를 가라키는 변수
 	
-	// 생성자 1
+	
+	/////////////////////
+	// constructor
+	/////////////////////
 	public ArrayQueue() {
 		this.array = new Object[DEFAULT_CAPACITY];
 		this.size = 0;
@@ -30,7 +42,6 @@ public class ArrayQueue<E> implements Queue<E> {
 		this.rear = 0;
 	}
 	
-	// 생성자 2
 	public ArrayQueue(int capacity) {
 		this.array = new Object[capacity];
 		this.size = 0;
@@ -38,6 +49,10 @@ public class ArrayQueue<E> implements Queue<E> {
 		this.rear = 0;
 	}
 	
+	
+	/////////////////////
+	// method
+	/////////////////////
 	public void resize(int newCapacity) {
 		
 		int arrayCapacity = array.length; // 현재 용적 크기
