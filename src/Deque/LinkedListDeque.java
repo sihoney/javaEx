@@ -6,6 +6,8 @@
 
 package Deque;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.NoSuchElementException;
 
 import interface_form.Queue;
@@ -302,5 +304,37 @@ public class LinkedListDeque<E> implements Queue<E> {
 	
 	public Object clone() {
 		
+		try {
+			@SuppressWarnings("unchecked")
+			LinkedListDeque<E> clone = (LinkedListDeque<E>) super.clone();
+			
+			clone.head = null;
+			clone.tail = null;
+			clone.size = 0;
+			
+			for(Node<E> x = head; x != null; x = x.next) {
+				clone.offerLast(x.data);
+			}
+			
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			throw new Error(e);
+		}
+	}
+	
+	public void sort() {
+		sort(null);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void sort(Comparator<? super E> c) {
+		
+		Object[] a = this.toArray();
+		Arrays.sort(a, (Comparator) c);
+		
+		int i = 0;
+		for(Node<E> x = head; x != null; x = x.next, i++) {
+			x.data = (E) a[i];
+		}
 	}
 }
