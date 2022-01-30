@@ -1,9 +1,3 @@
-/*
- * 배열로 구현한 Deque와의 차이점
- * - 이중 연결 리스트의 노드를 사용
- * (
- */
-
 package Deque;
 
 import java.util.Arrays;
@@ -14,34 +8,22 @@ import interface_form.Queue;
 
 public class LinkedListDeque<E> implements Queue<E> {
 
-	///////////////////
-	// field
-	///////////////////
 	private Node<E> head;
 	private Node<E> tail;
 	private int size;
 	
-	
-	///////////////////
-	// constructor
-	///////////////////
 	public LinkedListDeque() {
 		head = null;
 		tail = null;
 		size = 0;
 	}
 	
-	
-	///////////////////
-	// method
-	///////////////////
-	
 	/*
 	 * [offer 계열 메소드 구현]
 	 * - 가장 마지막 부분에 추가: offer(E item), offerLast(E item)
 	 * - 가장 앞의 부분에 추가: offerFirst(E item)
 	 * 
-	 * + 양방향 연결리스트의 경우, 전방 삽입부터 구현하는 것이 편리(직관적이기 때문)
+	 * + 양방향 연결리스트의 경우, 전방 삽입부터 구현하는 것이 편리 (직관적이기 때문)
 	 */
 	
 	public boolean offerFirst(E value) {
@@ -326,7 +308,7 @@ public class LinkedListDeque<E> implements Queue<E> {
 		sort(null);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void sort(Comparator<? super E> c) {
 		
 		Object[] a = this.toArray();
@@ -334,6 +316,7 @@ public class LinkedListDeque<E> implements Queue<E> {
 		
 		int i = 0;
 		for(Node<E> x = head; x != null; x = x.next, i++) {
+			
 			x.data = (E) a[i];
 		}
 	}
