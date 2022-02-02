@@ -137,6 +137,7 @@ public class Heap<E> {
 	/*
 	 * [remove 메소드 구현]
 	 */
+	@SuppressWarnings("unchecked")
 	public E remove() {
 		
 		if(array[1] == null) {

@@ -1,11 +1,12 @@
 package Queue;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.NoSuchElementException;
 
 import interface_form.Queue;
 
-public class PriorityQueue<E> implements Queue<E>{
+public class PriorityQueue<E> implements Queue<E>, Cloneable{
 
 	private final Comparator<? super E> comparator;
 	private static final int DEFAULT_CAPACITY = 10;
@@ -177,16 +178,150 @@ public class PriorityQueue<E> implements Queue<E>{
 			int right = getRightChild(parent);
 			Object childVal = array[child];
 			
-			if(comp.compare(target, (E) childVal) <= 0) {
-				
+			/*
+			 * 오른쪽 자식 인덱스가 size를 넘지 않으면서
+			 * 왼쪽 자식이 오른쪽 자식보다 큰 경우
+			 * 재배치 할 노드는 작은 자식과 비교해야 하므로 child와 childVal을
+			 * 오른쪽 자식으로 바꾸어 준다.
+			 */
+			
+			if(right <= size && comp.compare((E) childVal, (E) array[right]) > 0) {
+				child = right;
+				childVal = array[child];
 			}
+			
+			//  재배치 할 노드가 자식 노드보다 작을 경우 반복문을 종료
+			if(comp.compare(target, (E) childVal) <= 0) {
+				break;
+			}
+			
+			array[parent] = childVal;
+			parent = child;
+		}
+		
+		array[parent] = target;
+		
+		if(array.length > DEFAULT_CAPACITY && size < array.length / 4) {
+			resize(Math.max(DEFAULT_CAPACITY, array.length / 2));
 		}
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	private void siftDownComparable(int idx, E target) {
+		
+		Comparable<? super E> comp = (Comparable<? super E>) target;
+		
+		array[idx] = null;
+		
+		int parent = idx;
+		int child;
+		
+		while((child = (parent << 1)) <= size) {
+			
+			int right = child + 1;
+			Object c = array[child]; // childValue
+		
+			/*
+			 * 오른쪽 자식 인덱스가 size를 넘지 않으면서
+			 * 왼쪽 자식이 오른쪽 자식보다 큰 경우
+			 * 재배치 할 노드는 작은 자식과 비교해야 하므로 child와 childVal을
+			 * 오른쪽 자식으로 바꾸어 준다.
+			 */			
+			
+			if(right <= size && ((Comparable<? super E>) c).compareTo((E) array[right]) > 0) {
+				child = right;
+				c = array[child];
+			}
+			
+			//  재배치 할 노드가 자식 노드보다 작을 경우 반복문을 종료
+			if(comp.compareTo((E) c) <= 0) {
+				break;
+			}
+			
+			array[parent] = c;
+			parent = child;
+		}
+		array[parent] = comp;
+		
+		if(array.length > DEFAULT_CAPACITY && size < array.length / 4) {
+			resize(Math.max(DEFAULT_CAPACITY, array.length / 2));
+		}
+	}
+	
+	/*
+	 * [size, peek, isEmpty, contains, clear 메소드 구현]
+	 */
+	public int size() {
+		return this.size;
+	}
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public E peek() {
-		// TODO Auto-generated method stub
-		return null;
+		if(array[1] == null) {
+			throw new NoSuchElementException();
+		}
+		return (E) array[1];
+	}
+	
+	public boolean isEmpty() {
+		return size == 0;
 	}
 
+	public boolean contains(Object value) {
+		
+		for(int i = 1; i <= size; i++) {
+			if(array[i].equals(value)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void clear() {
+		
+		for(int i = 0; i < array.length; i++) {
+			array[i] = null;
+		}
+		
+		size = 0;
+	}
+	
+	/*
+	 * [toArray, clone 메소드 구현]
+	 */
+	public Object[] toArray() {
+		return toArray(new Object[size]);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> T[] toArray(T[] a) {
+		
+		if(a.length <= size) {
+			return (T[]) Arrays.copyOfRange(array, 1, size + 1, a.getClass());
+		}
+		System.arraycopy(array, 1, a, 0, size);
+		return a;
+	}
+	
+	/*
+	 * java에서는 PriorityQueue에 clone() 메소드를 제공하지는 않고 
+	 * 생성자에 PriorityQueue를 파라미터로 넘겨줌으로써 만드는 방식으로 지원하고 있다.
+	 */
+
+	@Override
+	public Object clone() {
+		try {
+			PriorityQueue<?> cloneHeap = (PriorityQueue<?>) super.clone();
+			
+			cloneHeap.array = new Object[size + 1];
+			
+			System.arraycopy(array, 0, cloneHeap.array, 0, size + 1);
+			return cloneHeap;
+		} 
+		catch(CloneNotSupportedException e) {
+			throw new Error(e);
+		}
+	}
 }
+
